@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bs-css": "^8.0.3",
+    "codemirror": "^5.45.0",
+    "nodemon": "^1.18.10",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "reason-scripts": "1.0.0"

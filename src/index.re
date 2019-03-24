@@ -6,7 +6,7 @@ external register_service_worker : unit => unit = "register";
 external unregister_service_worker : unit => unit = "unregister";
 
 ReactDOMRe.renderToElementWithId(
-  <App message="Welcome to React and Reason" />,
+  <App/>,
   "root",
 );
 
