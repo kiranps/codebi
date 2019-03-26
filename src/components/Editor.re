@@ -1,5 +1,25 @@
-[@bs.module] external codemirror: option(Dom.element) => unit = "codemirror";
-Utils.require("codemirror/lib/codemirror.css")
+[@bs.deriving abstract]
+type cmprops = {
+  lineNumbers: bool,
+  value: string,
+  keyMap: string
+};
+
+type cmd;
+type e;
+type sv = {. [@bs.set] "save": e  => unit };
+
+[@bs.module] external codemirror: (option(Dom.element), cmprops) => unit = "codemirror";
+[@bs.val] external commands: sv = "Codemirror.commands";
+[@bs.send] external getValue: (e) => string = "";
+
+commands##save #= ((e) => {
+  Js.log(getValue(e))
+})
+
+Utils.require("codemirror/lib/codemirror.css");
+Utils.require("codemirror/addon/dialog/dialog.css");
+Utils.require("codemirror/keymap/vim");
 
 type state = {
   editor: ref(option(Dom.element)),
@@ -23,9 +43,11 @@ let make = _children => {
       | Change(value) => ReasonReact.Update({...state, code: value})
       },
     didMount: self => {
-      codemirror(self.ReasonReact.state.editor^);
-      Js.log("hello");
+      let options = cmprops(~lineNumbers=true, ~value="hello world", ~keyMap="vim")
+      codemirror(self.ReasonReact.state.editor^, options) 
+      Js.log("hello")
     },
-    render: self => <div ref={self.handle(setEditorRef)} className=Styles.editor />,
+    render: self =>
+      <div ref={self.handle(setEditorRef)} className=Styles.editor />,
   };
 };
