@@ -5,13 +5,12 @@ type cmprops = {
   keyMap: string
 };
 
-type cmd;
-type e;
-type sv = {. [@bs.set] "save": e  => unit };
+type evt;
+type sv = {. [@bs.set] "save": evt  => unit };
 
 [@bs.module] external codemirror: (option(Dom.element), cmprops) => unit = "codemirror";
 [@bs.module "codemirror"] external commands: sv = "";
-[@bs.send] external getValue: (e) => string = "";
+[@bs.send] external getValue: evt => string = "";
 
 commands##save #= ((e) => {
   Js.log(getValue(e))
