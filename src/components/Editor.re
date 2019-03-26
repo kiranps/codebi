@@ -10,7 +10,7 @@ type e;
 type sv = {. [@bs.set] "save": e  => unit };
 
 [@bs.module] external codemirror: (option(Dom.element), cmprops) => unit = "codemirror";
-[@bs.val] external commands: sv = "Codemirror.commands";
+[@bs.module "codemirror"] external commands: sv = "";
 [@bs.send] external getValue: (e) => string = "";
 
 commands##save #= ((e) => {
