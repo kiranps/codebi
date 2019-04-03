@@ -9219,6 +9219,21 @@ realpath-native@^1.0.0, realpath-native@^1.1.0:
   dependencies:
     util.promisify "^1.0.0"
 
+reason-react-context@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/reason-react-context/-/reason-react-context-0.2.0.tgz#b269530d10e525377e4fdea7dd8c52caac9ff87b"
+  integrity sha1-smlTDRDlJTd+T96n3YxSyqyf+Hs=
+  dependencies:
+    reason-react "^0.4.1"
+
+reason-react@^0.4.1:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/reason-react/-/reason-react-0.4.2.tgz#690d34e3e91a2585cdc5f58384b6c8ff653c32c1"
+  integrity sha512-30SNLbpW8Ay0fB2nXb0H38ruv8I+WmznmnGze9C96+l3yEWa7/GccwwnenVLnye0t3o0j9Q9pC2E78oCw8tdDg==
+  dependencies:
+    react ">=15.0.0 || >=16.0.0"
+    react-dom ">=15.0.0 || >=16.0.0"
+
 reason-react@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/reason-react/-/reason-react-0.6.0.tgz#e9a7d6a10958161c3a12ef7fec1b6662edaae94a"

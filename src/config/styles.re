@@ -22,6 +22,17 @@ let editor_container =
     borderRight(px(1), solid, rgba(158, 158, 158, 0.41)),
   ]);
 
+let preview_container =
+  style([
+    position(absolute),
+    display(inlineBlock),
+    top(px(0)),
+    bottom(px(0)),
+    right(px(0)),
+    width(pct(50.0)),
+    boxSizing(borderBox),
+  ]);
+
 let editor =
   style([
     height(pct(100.0)),

@@ -8,6 +8,7 @@
     "nodemon": "^1.18.10",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
+    "reason-react-context": "^0.2.0",
     "reason-scripts": "1.0.0"
   },
   "scripts": {

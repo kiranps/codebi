@@ -1,3 +1,4 @@
+open Types;
 Utils.require("codemirror/keymap/vim");
 Utils.require("codemirror/lib/codemirror.css");
 Utils.require("codemirror/addon/dialog/dialog.css");
@@ -8,11 +9,11 @@ type state = {
 };
 
 type action =
-  | Change(string);
+  | ChangeInput(string);
 
 let component = ReasonReact.reducerComponent("Editor");
 
-let make = _children => {
+let make = (~dispatch, _children) => {
   let setEditorRef = (theRef, self) =>
     self.ReasonReact.state.editor := Js.Nullable.toOption(theRef);
   {
@@ -20,7 +21,7 @@ let make = _children => {
     initialState: () => {code: "", editor: ref(None)},
     reducer: (action, state) =>
       switch (action) {
-      | Change(value) => ReasonReact.Update({...state, code: value})
+      | ChangeInput(value) => ReasonReact.Update({...state, code: value})
       },
     didMount: self => {
       let options =
@@ -31,7 +32,15 @@ let make = _children => {
         );
       let cm = Codemirror.init(self.ReasonReact.state.editor^, options);
       Codemirror.commands##save #= (e => Js.log(Codemirror.getValue(e)));
-      Codemirror.on(cm, "change", e => Js.log(Codemirror.getValue(e)));
+      Codemirror.on(
+        cm,
+        "change",
+        e => {
+          let value = Codemirror.getValue(e);
+          Js.log(value);
+          dispatch(Change(value));
+        },
+      );
     },
     render: self =>
       <div ref={self.handle(setEditorRef)} className=Styles.editor />,
