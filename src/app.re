@@ -8,10 +8,10 @@ let make = _children => {
   ...component,
   render: _self =>
     <AppContext.Provider>
-      <EditorContainer> <EditorC /> </EditorContainer>
+      <EditorContainer> <Editor /> </EditorContainer>
       <PreviewContainer>
         <AppContext.Consumer>
-          ...{text => ReasonReact.string(text.state.code)}
+          ...{({state}) => ReasonReact.string(state.code)}
         </AppContext.Consumer>
       </PreviewContainer>
     </AppContext.Provider>,
