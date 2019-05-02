@@ -1,19 +1,20 @@
 {
-  "name": "reason-scripts",
-  "sources": [
+  "name": "codebi",
+  "reason": {
+    "react-jsx": 3
+  },
+  "sources": {
+    "dir": "src",
+    "subdirs": true
+  },
+  "package-specs": [
     {
-      "dir": "src",
-      "subdirs": true
+      "module": "commonjs",
+      "in-source": true
     }
   ],
-  "bs-dependencies": ["reason-react", "@glennsl/bs-jest", "bs-fetch", "bs-css"],
-  "reason": {
-    "react-jsx": 2
-  },
-  "refmt": 3,
-  "package-specs": {
-    "module": "commonjs",
-    "in-source": true
-  },
-  "suffix": ".bs.js"
+  "suffix": ".bs.js",
+  "namespace": true,
+  "bs-dependencies": ["reason-react", "bs-css"],
+  "refmt": 3
 }

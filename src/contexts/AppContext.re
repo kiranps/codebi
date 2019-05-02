@@ -1,33 +1,44 @@
-open Types;
+module Types = {
+  type state = {code: string};
+  type action =
+    | Change(string);
+};
 
-module AppContext =
-  Context.MakePair({
-    type t = providerType;
+module Context = {
+  type t = {
+    state: Types.state,
+    dispatch: Types.action => unit,
+  };
+  include ReactContext.Make({
+    type context = t;
     let defaultValue = {
       state: {
-        code: "",
+        code: "hello world kiran",
       },
       dispatch: _ => Js.log("nothing"),
     };
   });
+};
 
 module Provider = {
-  let component = ReasonReact.reducerComponent("AppProvider");
-
+  include Types;
+  [@react.component]
   let make = (~children) => {
-    {
-      ...component,
-      initialState: () => {code: "hello man"},
-      reducer: (action, state) =>
-        switch (action) {
-        | Change(value) => ReasonReact.Update({...state, code: value})
-        },
-      render: self =>
-        <AppContext.Provider value={state: self.state, dispatch: self.send}>
-          ...children
-        </AppContext.Provider>,
-    };
+    let (state, dispatch) =
+      React.useReducer(
+        (state, action) =>
+          switch (action) {
+          | Change(value) => {code: value}
+          },
+        {code: ""},
+      );
+    <Context.Provider value={state, dispatch}> children </Context.Provider>;
   };
 };
 
-module Consumer = AppContext.Consumer;
+let useApp = () => {
+  let ctx = React.useContext(Context.x);
+  Js.log(ctx);
+  let save = value => ctx.dispatch(Change(value));
+  (ctx.state, save);
+};
