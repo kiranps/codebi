@@ -5,8 +5,6 @@ let make = () => {
   let route = ReasonReactRouter.useUrl().hash;
   let docId = String.sub(route, 8, 2);
 
-  Js.log("Editor");
-
   React.useEffect1(
     () => {
       let code =

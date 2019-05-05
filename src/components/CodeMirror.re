@@ -6,8 +6,6 @@ Utils.require("codemirror/addon/dialog/dialog.css");
 let make =
   React.memo((~value, ~onChange=?, ~onSave=?) => {
     let divRef = React.useRef(Js.Nullable.null);
-    Js.log("Codemirror");
-    Js.log(value);
 
     React.useEffect1(
       () => {
