@@ -37,7 +37,7 @@ let make =
 
         Some(() => ());
       },
-      [|true|],
+      [||],
     );
 
     <div className=Styles.editor ref={ReactDOMRe.Ref.domRef(divRef)} />;

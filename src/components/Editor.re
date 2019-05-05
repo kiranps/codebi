@@ -16,7 +16,7 @@ let make = () => {
       setCode(_ => code);
       Some(() => ());
     },
-    [|true|],
+    [||],
   );
 
   let handleSave =
