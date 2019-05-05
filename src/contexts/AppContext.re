@@ -38,7 +38,6 @@ module Provider = {
 
 let useApp = () => {
   let ctx = React.useContext(Context.x);
-  Js.log(ctx);
   let save = value => ctx.dispatch(Change(value));
   (ctx.state, save);
 };
