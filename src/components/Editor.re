@@ -1,7 +1,7 @@
 [@react.component]
 let make = () => {
   let (_state, change) = AppContext.useApp();
-  let (code, setCode) = React.useState(() => "");
+  let (code, setCode) = React.useState(() => None);
   let route = ReasonReactRouter.useUrl().hash;
   let docId = String.sub(route, 8, 2);
 
@@ -13,18 +13,23 @@ let make = () => {
         | Some(value) => value
         };
       change(code);
-      setCode(_ => code);
+      setCode(_ => Some(code));
       Some(() => ());
     },
     [||],
   );
 
   let handleSave =
-    React.useCallback1(value => LocalStorage.setItem(docId, value), [||]);
+    React.useCallback1(
+      value => {
+        LocalStorage.setItem(docId, value);
+        change(value);
+      },
+      [||],
+    );
 
-  let handleChange = React.useCallback1(value => change(value), [||]);
-
-  code === "" ?
-    <Loading /> :
-    <CodeMirror value=code onChange=handleChange onSave=handleSave />;
+  switch (code) {
+  | None => <Loading />
+  | Some(value) => <CodeMirror value onSave=handleSave />
+  };
 };
