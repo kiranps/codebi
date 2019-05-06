@@ -1,2 +1,2 @@
-[@bs.module "./ErrorBoundary.js"] [@react.component]
+[@bs.module "./dist/ErrorBoundary.js"] [@react.component]
 external make: (~children: React.element) => React.element = "default";

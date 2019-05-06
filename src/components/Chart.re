@@ -14,7 +14,7 @@ let make = (~options) => {
         chartjs(Js.Nullable.toOption(React.Ref.(current(divRef))), options);
       Some(() => ());
     },
-    [||],
+    [|options|],
   );
 
   <canvas ref={ReactDOMRe.Ref.domRef(divRef)} width="400" height="400" />;

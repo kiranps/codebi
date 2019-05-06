@@ -1,5 +1,6 @@
-type t;
+[@bs.val] external eval: string => Chart.options = "eval";
 
-[@bs.val] external eval: string => string = "eval";
-
-let parse = str => eval("(" ++ str ++ ")");
+let parse = str =>
+  try (Some(eval("(" ++ str ++ ")"))) {
+  | Js.Exn.Error(e) => None
+  };
