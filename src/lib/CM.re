@@ -2,6 +2,7 @@
 type cmprops = {
   lineNumbers: bool,
   value: string,
+  mode: string,
   keyMap: string,
 };
 
