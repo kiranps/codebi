@@ -2,5 +2,7 @@
 
 let parse = str =>
   try (Some(eval("(" ++ str ++ ")"))) {
-  | Js.Exn.Error(e) => None
+  | Js.Exn.Error(e) =>
+    Js.log(e);
+    None;
   };

@@ -1,25 +1,22 @@
-import React, { Component } from "react";
+const createReactClass = require("create-react-class");
 
-export default class ErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, info) {
-    // You can also log the error to an error reporting service
-  }
-
-  render() {
+const ErrorBoundary = createReactClass({
+  getInitialState: function() {
+    return { hasError: false };
+  },
+  statics: {
+    getDerivedStateFromError: function(error) {
+      return { hasError: true };
+    }
+  },
+  componentDidCatch: function() {},
+  render: function() {
     if (this.state.hasError) {
-      return <span>Something went wrong.</span>;
+      return "Something went wrong";
     }
 
     return this.props.children;
   }
-}
+});
+
+module.exports.default = ErrorBoundary;
