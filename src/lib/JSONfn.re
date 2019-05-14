@@ -1,4 +1,4 @@
-[@bs.val] external eval: string => Chart.options = "eval";
+[@bs.val] external eval: string => Chart.Chart.options = "eval";
 
 let parse = str =>
   try (Some(eval("(" ++ str ++ ")"))) {

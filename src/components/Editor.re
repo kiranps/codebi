@@ -1,9 +1,7 @@
 [@react.component]
-let make = () => {
+let make = (~docId) => {
   let (_state, change) = AppContext.useApp();
   let (code, setCode) = React.useState(() => None);
-  let route = ReasonReactRouter.useUrl().hash;
-  let docId = String.sub(route, 8, 2);
 
   React.useEffect1(
     () => {
