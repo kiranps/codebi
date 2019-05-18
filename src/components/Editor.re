@@ -5,6 +5,8 @@ let make = (~docId) => {
 
   React.useEffect1(
     () => {
+      Js.log(Utils.uuid());
+
       let code =
         switch (LocalStorage.getItem(docId)) {
         | None => ""
