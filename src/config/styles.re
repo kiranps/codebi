@@ -40,3 +40,21 @@ let editor =
     width(pct(100.0)),
     selector("& > div", [height(pct(100.0))]),
   ]);
+
+let widget =
+  style([
+    boxSizing(borderBox),
+    borderRadius(px(4)),
+    backgroundColor(white),
+    padding(px(10)),
+    boxShadow(
+      ~x=px(0),
+      ~y=px(2),
+      ~blur=px(5),
+      ~inset=false,
+      rgba(0, 0, 0, 0.1),
+    ),
+  ]);
+
+/*
+ box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1); */
