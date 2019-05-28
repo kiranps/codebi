@@ -30,7 +30,6 @@ let cols = [%raw {|
 [@react.component]
 let make = _ => {
   let width = Hooks.useWindowSize();
-  Js.log(width);
 
   <GridLayout.Responsive
     className="layout" layouts breakpoints cols rowHeight=30 width>

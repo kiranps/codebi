@@ -4,8 +4,8 @@ let make = () => {
   let path = Js.String.split("/", hash);
 
   switch (path) {
-  | [|"", "widgets"|] => <Widgets />
-  | [|"", "dashboards"|] => <Dashboards />
+  | [|"", "widgets"|] => <ListWidgets />
+  | [|"", "dashboards"|] => <ListDashboards />
   | [|"", "grid"|] => <Grid />
   | [|"", "editor", docId|] => <Builder docId />
   | _ => <NotFound />
