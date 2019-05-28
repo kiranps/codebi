@@ -15,7 +15,7 @@ module Context = {
       state: {
         code: "hello world kiran",
       },
-      dispatch: _ => Js.log("nothing"),
+      dispatch: _ => (),
     };
   });
 };
@@ -26,7 +26,7 @@ module Provider = {
   let make = (~children) => {
     let (state, dispatch) =
       React.useReducer(
-        (state, action) =>
+        (_state, action) =>
           switch (action) {
           | Change(value) => {code: value}
           },
