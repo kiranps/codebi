@@ -18,10 +18,13 @@
   "dependencies": {
     "@glennsl/bs-json": "^3.0.0",
     "bs-css": "^8.0.4",
+    "bs-fetch": "^0.3.1",
     "chart.js": "^2.8.0",
     "codemirror": "^5.45.0",
     "create-react-class": "^15.6.3",
     "file-loader": "^3.0.1",
+    "micro": "^9.3.4",
+    "mongoose": "^5.5.11",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-grid-layout": "^0.16.6",
