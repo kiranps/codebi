@@ -1,5 +1,8 @@
 {
   "version": 2,
-  "builds": [{ "src": "server/index.js", "use": "@now/node" }],
-  "routes": [{ "src": "/api/hello", "dest": "server/index.js" }]
+  "builds": [{ "src": "server/*.js", "use": "@now/node" }],
+  "routes": [
+    { "src": "/api/hello", "dest": "server/index.js" },
+    { "src": "/api/create-widget/(?<id>[^/]+)", "dest": "server/index.js" }
+  ]
 }

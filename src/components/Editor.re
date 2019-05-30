@@ -42,7 +42,7 @@ let make = (~docId) => {
   let (code, setCode) = React.useState(() => None);
 
   React.useEffect0(() => {
-    Api.fetchWidgets();
+    /* Api.fetchWidgets(); */
 
     let code =
       switch (docId |> LocalStorage.getItem) {

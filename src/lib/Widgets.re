@@ -18,6 +18,20 @@ module Decode = {
   let widgets = Json.Decode.array(widget);
 };
 
+module Encode = {
+  include Types;
+  let widget = widget =>
+    Json.Encode.(
+      object_([
+        ("id", string(widget.id)),
+        ("name", string(widget.name)),
+        ("config", string(widget.config)),
+      ])
+    );
+
+  let widgets = x => x |> Array.map(widget) |> Json.Encode.jsonArray;
+};
+
 let useWidget = () => {
   let (widgets, setWidget) = React.useState(() => [||]);
 

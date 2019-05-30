@@ -19,6 +19,7 @@
     "@glennsl/bs-json": "^3.0.0",
     "bs-css": "^8.0.4",
     "bs-fetch": "^0.3.1",
+    "bs-platform": "^5.0.4",
     "chart.js": "^2.8.0",
     "codemirror": "^5.45.0",
     "create-react-class": "^15.6.3",
@@ -35,7 +36,6 @@
     "bs-platform": "^5.0.4",
     "css-loader": "^2.1.1",
     "html-webpack-plugin": "^3.2.0",
-    "nodemon": "^1.18.10",
     "webpack": "^4.0.1",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.8"
