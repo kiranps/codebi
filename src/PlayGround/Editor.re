@@ -1,4 +1,4 @@
-open Widgets.Types;
+open Widget.Types;
 
 let toWidgetDict = widget => {
   let dict = Js.Dict.empty();
@@ -12,7 +12,7 @@ let getWidgets = () =>
   switch (LocalStorage.getItem("widgets")) {
   | None => [||]
   | Some(value) =>
-    let widgets = value |> Json.parseOrRaise |> Widgets.Decode.widgets;
+    let widgets = value |> Json.parseOrRaise |> Widget.Decode.objectArray;
     widgets;
   };
 
@@ -42,7 +42,7 @@ let make = (~docId) => {
   let (code, setCode) = React.useState(() => None);
 
   React.useEffect0(() => {
-    /* Api.fetchWidgets(); */
+    /* Api.getWidget(docId); */
 
     let code =
       switch (docId |> LocalStorage.getItem) {
@@ -57,7 +57,9 @@ let make = (~docId) => {
 
   let handleSave =
     React.useCallback0(value => {
-      LocalStorage.setItem(docId, value);
+      let data = {id: docId, name: docId, config: value};
+      Widget.save(data);
+      /* LocalStorage.setItem(docId, value); */
       change(value);
     });
 

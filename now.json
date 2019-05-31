@@ -2,7 +2,14 @@
   "version": 2,
   "builds": [{ "src": "server/*.js", "use": "@now/node" }],
   "routes": [
-    { "src": "/api/hello", "dest": "server/index.js" },
-    { "src": "/api/create-widget/(?<id>[^/]+)", "dest": "server/index.js" }
+    { "src": "/api/get-widgets", "dest": "server/getWidgets.js" },
+    {
+      "src": "/api/create-widget",
+      "dest": "server/createWidget.js"
+    },
+    {
+      "src": "/api/get-widget/",
+      "dest": "server/getWidget.js"
+    }
   ]
 }

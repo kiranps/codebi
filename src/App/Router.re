@@ -4,10 +4,10 @@ let make = () => {
   let path = Js.String.split("/", hash);
 
   switch (path) {
-  | [|"", "widgets"|] => <ListWidgets />
-  | [|"", "dashboards"|] => <Dashboards />
+  | [|"", "widgets"|] => <WidgetsPage />
+  | [|"", "dashboards"|] => <DashboardsPage />
   | [|"", "grid"|] => <Grid />
-  | [|"", "editor", docId|] => <PlayGround docId />
-  | _ => <NotFound />
+  | [|"", "editor", docId|] => <PlayGroundPage docId />
+  | _ => <NotFoundPage />
   };
 };
