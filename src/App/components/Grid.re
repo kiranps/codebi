@@ -1,3 +1,4 @@
+open Css;
 Utils.require("react-grid-layout/css/styles.css");
 
 let layouts = [%raw
@@ -27,14 +28,29 @@ let cols = [%raw {|
     {lg: 12, md: 12, sm: 12, xs: 12, xxs: 12}
   |}];
 
+let widget =
+  style([
+    boxSizing(borderBox),
+    borderRadius(px(4)),
+    backgroundColor(white),
+    padding(px(10)),
+    boxShadow(
+      ~x=px(0),
+      ~y=px(2),
+      ~blur=px(5),
+      ~inset=false,
+      rgba(0, 0, 0, 0.1),
+    ),
+  ]);
+
 [@react.component]
 let make = _ => {
   let width = Hooks.useWindowSize();
 
   <GridLayout.Responsive
     className="layout" layouts breakpoints cols rowHeight=30 width>
-    <div key="a" className=Styles.widget> {React.string("a")} </div>
-    <div key="b" className=Styles.widget> {React.string("b")} </div>
-    <div key="c" className=Styles.widget> {React.string("c")} </div>
+    <div key="a" className=widget> {React.string("a")} </div>
+    <div key="b" className=widget> {React.string("b")} </div>
+    <div key="c" className=widget> {React.string("c")} </div>
   </GridLayout.Responsive>;
 };

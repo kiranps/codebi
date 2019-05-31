@@ -1,6 +1,6 @@
 [@react.component]
 let make = (~docId) =>
-  <AppContext.Provider>
+  <PlayGroundContext.Provider>
     <EditorContainer> <Editor docId /> </EditorContainer>
     <PreviewContainer> <Preview /> </PreviewContainer>
-  </AppContext.Provider>;
+  </PlayGroundContext.Provider>;

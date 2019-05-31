@@ -1,6 +1,6 @@
 [@react.component]
 let make = () => {
-  let (state, _) = AppContext.useApp();
+  let (state, _) = PlayGroundContext.useApp();
 
   let result = JSONfn.parse(state.code);
   Js.log(result);

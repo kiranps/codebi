@@ -5,9 +5,9 @@ let make = () => {
 
   switch (path) {
   | [|"", "widgets"|] => <ListWidgets />
-  | [|"", "dashboards"|] => <ListDashboards />
+  | [|"", "dashboards"|] => <Dashboards />
   | [|"", "grid"|] => <Grid />
-  | [|"", "editor", docId|] => <Builder docId />
+  | [|"", "editor", docId|] => <PlayGround docId />
   | _ => <NotFound />
   };
 };

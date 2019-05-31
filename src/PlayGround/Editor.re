@@ -38,7 +38,7 @@ let fetchOrCreatewidget = id => {
 
 [@react.component]
 let make = (~docId) => {
-  let (_state, change) = AppContext.useApp();
+  let (_state, change) = PlayGroundContext.useApp();
   let (code, setCode) = React.useState(() => None);
 
   React.useEffect0(() => {

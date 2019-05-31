@@ -1,3 +1,5 @@
+open Css;
+
 Utils.require("codemirror/keymap/vim");
 Utils.require("codemirror/lib/codemirror.css");
 Utils.require("codemirror/addon/dialog/dialog.css");
@@ -22,6 +24,13 @@ module CM = {
   [@bs.send] external getValue: evt => string = "";
   [@bs.send] external on: (cm, string, evt => unit) => unit = "";
 };
+
+let editor =
+  style([
+    height(pct(100.0)),
+    width(pct(100.0)),
+    selector("& > div", [height(pct(100.0))]),
+  ]);
 
 [@react.component]
 let make =
@@ -62,5 +71,5 @@ let make =
       Some(() => ());
     });
 
-    <div className=Styles.editor ref={ReactDOMRe.Ref.domRef(divRef)} />;
+    <div className=editor ref={ReactDOMRe.Ref.domRef(divRef)} />;
   });
