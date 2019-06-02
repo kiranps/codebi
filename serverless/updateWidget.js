@@ -7,8 +7,11 @@ mongoose.connect("mongodb://localhost:27017/widgets", {
 });
 
 module.exports = async (req, res) => {
-  const data = await json(req);
-  const widget = new Widget(data);
-  widget.save().then(() => console.log("meow"));
-  send(res, 201, { message: "hello world" });
+  const { id, name, config } = await json(req);
+  try {
+    const widget = await Widget.updateOne({ _id: id }, { name, config }).exec();
+    send(res, 200, { status: "success" });
+  } catch (error) {
+    send(res, 200, { status: "error" });
+  }
 };

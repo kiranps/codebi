@@ -1,15 +1,19 @@
 {
   "version": 2,
-  "builds": [{ "src": "server/*.js", "use": "@now/node" }],
+  "builds": [{ "src": "serverless/*.js", "use": "@now/node" }],
   "routes": [
-    { "src": "/api/get-widgets", "dest": "server/getWidgets.js" },
+    { "src": "/api/get-widgets", "dest": "serverless/getWidgets.js" },
     {
       "src": "/api/create-widget",
-      "dest": "server/createWidget.js"
+      "dest": "serverless/createWidget.js"
+    },
+    {
+      "src": "/api/update-widget",
+      "dest": "serverless/updateWidget.js"
     },
     {
       "src": "/api/get-widget/",
-      "dest": "server/getWidget.js"
+      "dest": "serverless/getWidget.js"
     }
   ]
 }
