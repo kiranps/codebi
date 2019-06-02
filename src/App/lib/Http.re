@@ -1,4 +1,4 @@
-let get = url => Fetch.fetch(url);
+let get = url => Js.Promise.(Fetch.fetch(url) |> then_(Fetch.Response.json));
 
 let post = (url, data) => {
   let contentType = {"Content-Type": "application/json"};

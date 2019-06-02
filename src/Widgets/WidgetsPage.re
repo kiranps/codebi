@@ -1,16 +1,21 @@
 open Widget.Types;
 
+let openPlayground = id => "#/playground/" ++ id |> ReasonReactRouter.push;
+
 [@react.component]
 let make = _ => {
   let (widgets, _) = Widget.useWidget();
 
   React.useEffect0(() => {
-    Http.get("/api/get-widgets");
+    Widget.Api.fetchAll();
     Some(() => ());
   });
 
   let handleCreate = _ => {
-    Js.Promise.(Widget.create() |> then_(json => json |> Js.log |> resolve));
+    Js.Promise.(
+      Widget.Api.create()
+      |> then_(json => json.id |> openPlayground |> resolve)
+    );
     ();
   };
 

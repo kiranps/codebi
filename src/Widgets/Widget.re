@@ -9,10 +9,34 @@ module Types = {
     name: string,
     config: string,
   };
+
+  type widgetResponse =
+    | Widget(widgetType)
+    | NotFound
+    | Failure;
+
+  type widgetResponse0 = {
+    status: string,
+    message: string,
+  };
+
+  type widgetResponse1 = {
+    status: string,
+    widget: widgetType,
+  };
+
+  type widgetResponse2 = {status: string};
+
+  type widgetResponse3 = {
+    status: string,
+    widget: widgetType,
+    message: string,
+  };
 };
 
 module Decode = {
-  include Types;
+  open Types;
+
   let object_ = json =>
     Json.Decode.{
       id: json |> field("id", string),
@@ -21,10 +45,15 @@ module Decode = {
     };
 
   let objectArray = Json.Decode.array(object_);
+
+  let status = json => json |> Json.Decode.(field("status", string));
+
+  let widget = json => json |> Json.Decode.(field("widget", object_));
 };
 
 module Encode = {
-  include Types;
+  open Types;
+
   let object_ = widget =>
     Json.Encode.(
       object_([
@@ -37,21 +66,43 @@ module Encode = {
   let objectArray = x => x |> Array.map(object_) |> Json.Encode.jsonArray;
 };
 
-let save = data => {
-  let payload = data |> Encode.object_;
-
-  Js.Promise.(Http.post("/api/update-widget", payload));
-};
-
-let create = _ => {
+module Api = {
   open Types;
-  let payload =
-    Json.Encode.(object_([("name", string("")), ("config", string(""))]));
 
-  Http.post("/api/create-widget", payload);
+  let save = data => {
+    let payload = data |> Encode.object_;
+
+    Js.Promise.(Http.post("/api/update-widget", payload));
+  };
+
+  let create = _ => {
+    open Types;
+    let payload =
+      Json.Encode.(
+        object_([("name", string("")), ("config", string(""))])
+      );
+
+    Js.Promise.(
+      Http.post("/api/create-widget", payload)
+      |> then_(json => json |> Decode.object_ |> resolve)
+    );
+  };
+
+  let fetchAll = () => Http.get("/api/get-widgets");
+
+  let fetch = id =>
+    Js.Promise.(
+      Http.get("/api/get-widget/?id=" ++ id)
+      |> then_(json =>
+           switch (Decode.status(json)) {
+           | "found" =>
+             json |> Decode.widget |> (json => Widget(json) |> resolve)
+           | "not_found" => NotFound |> resolve
+           | _ => Failure |> resolve
+           }
+         )
+    );
 };
-
-let fetchWidgets = () => Http.get("/api/get-widgets");
 
 let useWidget = () => {
   let (widgets, setWidget) = React.useState(() => [||]);

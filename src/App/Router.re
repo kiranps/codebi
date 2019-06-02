@@ -7,7 +7,7 @@ let make = () => {
   | [|"", "widgets"|] => <WidgetsPage />
   | [|"", "dashboards"|] => <DashboardsPage />
   | [|"", "grid"|] => <Grid />
-  | [|"", "editor", docId|] => <PlayGroundPage docId />
+  | [|"", "playground", docId|] => <PlayGroundPage docId />
   | _ => <NotFoundPage />
   };
 };

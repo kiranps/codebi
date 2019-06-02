@@ -1,70 +1,47 @@
 open Widget.Types;
 
-let toWidgetDict = widget => {
-  let dict = Js.Dict.empty();
-  Js.Dict.set(dict, "id", Js.Json.string(widget.id));
-  Js.Dict.set(dict, "name", Js.Json.string(widget.name));
-  Js.Dict.set(dict, "config", Js.Json.string(widget.config));
-  dict;
-};
-
-let getWidgets = () =>
-  switch (LocalStorage.getItem("widgets")) {
-  | None => [||]
-  | Some(value) =>
-    let widgets = value |> Json.parseOrRaise |> Widget.Decode.objectArray;
-    widgets;
-  };
-
-let appendWidget = widget => {
-  let widgets = getWidgets() |> Array.map(toWidgetDict);
-  Array.append(widgets, [|widget|]);
-};
-
-let stringifyJsonArray = json =>
-  Js.Json.stringify(Js.Json.objectArray(json));
-
-let fetchOrCreatewidget = id => {
-  let data = {id, name: id, config: ""};
-  let str = data |> toWidgetDict |> appendWidget |> stringifyJsonArray;
-  str;
-};
-
-/*
-  let widg = wid |> toJsWidget |> Array.append([||])
-  let widg2 = widg |> Array.append(widg)
-  let stringifyWidgets = (widgets) => Js.Json.stringify(Js.Json.objectArray(widgets))
- */
+type codeState =
+  | NotFound
+  | Error
+  | Config(string)
+  | Loading;
 
 [@react.component]
 let make = (~docId) => {
   let (_state, change) = PlayGroundContext.useApp();
-  let (code, setCode) = React.useState(() => None);
+  let (code, setCode) = React.useState(() => Loading);
 
   React.useEffect0(() => {
-    /* Api.getWidget(docId); */
+    Js.Promise.(
+      Widget.Api.fetch(docId)
+      |> then_(json =>
+           (
+             switch (json) {
+             | Widget(data) =>
+               data |> (widget => setCode(_ => Config(widget.config)))
+             | NotFound => setCode(_ => NotFound)
+             | Failure => setCode(_ => Error)
+             }
+           )
+           |> resolve
+         )
+    );
 
-    let code =
-      switch (docId |> LocalStorage.getItem) {
-      | None => ""
-      | Some(value) => value
-      };
-
-    change(code);
-    setCode(_ => Some(code));
     Some(() => ());
   });
 
   let handleSave =
     React.useCallback0(value => {
       let data = {id: docId, name: docId, config: value};
-      Widget.save(data);
+      Widget.Api.save(data);
       /* LocalStorage.setItem(docId, value); */
       change(value);
     });
 
   switch (code) {
-  | None => <Loading />
-  | Some(value) => <CodeMirror value onSave=handleSave />
+  | Loading => <Loading />
+  | Config(value) => <CodeMirror value onSave=handleSave />
+  | NotFound => <div> {"Not found" |> React.string} </div>
+  | Error => <div> {"Error" |> React.string} </div>
   };
 };
