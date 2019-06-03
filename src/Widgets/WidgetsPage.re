@@ -4,10 +4,21 @@ let openPlayground = id => "#/playground/" ++ id |> ReasonReactRouter.push;
 
 [@react.component]
 let make = _ => {
-  let (widgets, _) = Widget.useWidget();
+  let (widgets, setWidgets) = React.useState(() => [||]);
 
   React.useEffect0(() => {
-    Widget.Api.fetchAll();
+    Js.Promise.(
+      Widget.Api.fetchAll()
+      |> then_(json =>
+           (
+             switch (json) {
+             | Widgets(data) => setWidgets(_ => data)
+             | Failure => setWidgets(_ => [||])
+             }
+           )
+           |> resolve
+         )
+    );
     Some(() => ());
   });
 
@@ -23,7 +34,13 @@ let make = _ => {
     {
       React.array(
         Array.map(
-          widget => <div key={widget.id}> {React.string(widget.name)} </div>,
+          widget =>
+            <div>
+              <span key={widget.id}> {React.string(widget.id)} </span>
+              <a href={"#/playground/" ++ widget.id}>
+                {"open" |> React.string}
+              </a>
+            </div>,
           widgets,
         ),
       )

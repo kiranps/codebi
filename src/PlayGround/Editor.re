@@ -1,5 +1,4 @@
 open Widget.Types;
-
 type codeState =
   | NotFound
   | Error
@@ -18,7 +17,13 @@ let make = (~docId) => {
            (
              switch (json) {
              | Widget(data) =>
-               data |> (widget => setCode(_ => Config(widget.config)))
+               data
+               |> (
+                 widget => {
+                   change(widget.config);
+                   setCode(_ => Config(widget.config));
+                 }
+               )
              | NotFound => setCode(_ => NotFound)
              | Failure => setCode(_ => Error)
              }
@@ -34,7 +39,6 @@ let make = (~docId) => {
     React.useCallback0(value => {
       let data = {id: docId, name: docId, config: value};
       Widget.Api.save(data);
-      /* LocalStorage.setItem(docId, value); */
       change(value);
     });
 

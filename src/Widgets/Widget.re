@@ -15,6 +15,10 @@ module Types = {
     | NotFound
     | Failure;
 
+  type widgetsResponse =
+    | Widgets(array(widgetType))
+    | Failure;
+
   type widgetResponse0 = {
     status: string,
     message: string,
@@ -49,6 +53,9 @@ module Decode = {
   let status = json => json |> Json.Decode.(field("status", string));
 
   let widget = json => json |> Json.Decode.(field("widget", object_));
+
+  let widgetArray = json =>
+    json |> Json.Decode.(field("widgets", objectArray));
 };
 
 module Encode = {
@@ -88,18 +95,33 @@ module Api = {
     );
   };
 
-  let fetchAll = () => Http.get("/api/get-widgets");
+  let fetchAll = () =>
+    Js.Promise.(
+      Http.get("/api/get-widgets")
+      |> then_(json =>
+           (
+             switch (Decode.status(json)) {
+             | "success" =>
+               json |> Decode.widgetArray |> (json => Widgets(json))
+             | _ => Failure
+             }
+           )
+           |> resolve
+         )
+    );
 
   let fetch = id =>
     Js.Promise.(
       Http.get("/api/get-widget/?id=" ++ id)
       |> then_(json =>
-           switch (Decode.status(json)) {
-           | "found" =>
-             json |> Decode.widget |> (json => Widget(json) |> resolve)
-           | "not_found" => NotFound |> resolve
-           | _ => Failure |> resolve
-           }
+           (
+             switch (Decode.status(json)) {
+             | "found" => json |> Decode.widget |> (json => Widget(json))
+             | "not_found" => NotFound
+             | _ => Failure
+             }
+           )
+           |> resolve
          )
     );
 };
