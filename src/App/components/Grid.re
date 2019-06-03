@@ -1,18 +1,16 @@
 open Css;
+open Widget.Types;
+open GridLayout.Types;
+
 Utils.require("react-grid-layout/css/styles.css");
 
 let layouts = [%raw
   {|
     {
      lg: [
-      {i: 'a', x: 0, y: 0, w: 4, h: 3},
-      {i: 'b', x: 4, y: 0, w: 4, h: 3},
-      {i: 'c', x: 8, y: 0, w: 4, h: 3}
-     ],
-     md: [
-      {i: 'a', x: 0, y: 0, w: 4, h: 3},
-      {i: 'b', x: 4, y: 0, w: 4, h: 3},
-      {i: 'c', x: 8, y: 0, w: 4, h: 3}
+      {i: 'a', x: 0, y: 0, w: 4, h: 4},
+      {i: 'b', x: 4, y: 0, w: 4, h: 4},
+      {i: 'c', x: 8, y: 0, w: 4, h: 4}
      ]
     }
   |}
@@ -43,14 +41,70 @@ let widget =
     ),
   ]);
 
+/* w: 4,
+   h: 9,
+   x: (i % 3) * 4,
+   y: Math.floor((i / 3) * 3),
+   i: widget.id.toString() */
+
+let createLayouts = x => gridLayout(~lg=x);
+
+let generateLayout = arr =>
+  arr
+  |> Array.mapi((i, widget) =>
+       layout(~w=4, ~h=4, ~x=i mod 3 * 4, ~y=i / 3 * 3, ~i=widget.id)
+     )
+  |> createLayouts;
+
 [@react.component]
 let make = _ => {
+  let (widgets, setWidgets) = React.useState(() => [||]);
   let width = Hooks.useWindowSize();
 
+  React.useEffect0(() => {
+    Js.Promise.(
+      Widget.Api.fetchAll()
+      |> then_(json =>
+           (
+             switch (json) {
+             | Widgets(data) => setWidgets(_ => data)
+             | Failure => setWidgets(_ => [||])
+             }
+           )
+           |> resolve
+         )
+    );
+
+    Some(() => ());
+  });
+
   <GridLayout.Responsive
-    className="layout" layouts breakpoints cols rowHeight=30 width>
-    <div key="a" className=widget> {React.string("a")} </div>
-    <div key="b" className=widget> {React.string("b")} </div>
-    <div key="c" className=widget> {React.string("c")} </div>
+    className="layout"
+    layouts={generateLayout(widgets)}
+    breakpoints
+    cols
+    rowHeight=80
+    width>
+    {
+      React.array(
+        Array.map(
+          w =>
+            <div key={w.id} className=widget>
+              {
+                w.config
+                |> JSONfn.parse
+                |> (
+                  config =>
+                    switch (config) {
+                    | None => "error" |> React.string
+                    | Some(options) => <Chart options />
+                    }
+                )
+              }
+            </div>,
+          widgets,
+        ),
+      )
+    }
   </GridLayout.Responsive>;
 };

@@ -1,10 +1,25 @@
-type layout;
+module Types = {
+  [@bs.deriving abstract]
+  type layout = {
+    w: int,
+    h: int,
+    x: int,
+    y: int,
+    i: string,
+  };
+
+  [@bs.deriving abstract]
+  type gridLayout = {lg: array(layout)};
+};
+
+open Types;
+
 [@bs.module] [@react.component]
 external make:
   (
     ~children: React.element,
     ~className: string=?,
-    ~layouts: array(layout)=?,
+    ~layouts: gridLayout=?,
     ~cols: int=?,
     ~rowHeight: int=?,
     ~width: int=?
@@ -19,7 +34,7 @@ module Responsive = {
     (
       ~children: React.element,
       ~className: string=?,
-      ~layouts: array(layout)=?,
+      ~layouts: gridLayout=?,
       ~breakpoints: breakpoints,
       ~cols: breakpoints,
       ~rowHeight: int=?,
