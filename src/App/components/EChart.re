@@ -6,22 +6,20 @@ module EChart = {
 
   [@bs.send] external init: (echarts, ctx) => chart = "";
   [@bs.send] external setOption: (chart, options) => unit = "";
-  [@bs.send] external resize: chart => unit = "";
+  [@bs.send] external resize: Js.Nullable.t(chart) => unit = "";
   [@bs.module] external echarts: echarts = "echarts";
 
   [@react.component]
-  let make = (~options, ~redraw=false) => {
+  let make = (~options, ~redraw) => {
     let divRef = React.useRef(Js.Nullable.null);
-    let myChart = React.useRef(true);
+    let myChart = React.useRef(Js.Nullable.null);
 
     React.useEffect1(
       () => {
         let dom = Js.Nullable.toOption(React.Ref.(current(divRef)));
         let plot = init(echarts, dom);
-        Js.log(plot);
-        Js.log(myChart);
         let _ = setOption(plot, options);
-        Utils.addEvent(Utils.window, "resize", _ => resize(plot));
+        React.Ref.(setCurrent(myChart, Js.Nullable.return(plot)));
         Some(() => ());
       },
       [|options|],
@@ -29,7 +27,12 @@ module EChart = {
 
     React.useEffect1(
       () => {
-        Js.log(redraw);
+        switch (redraw) {
+        | Some(value) =>
+          let (height, width) = value;
+          React.Ref.(current(myChart)) |> resize;
+        | None => Js.log("none")
+        };
         Some(() => ());
       },
       [|redraw|],
@@ -43,4 +46,5 @@ module EChart = {
 };
 
 [@react.component]
-let make = (~options) => <ErrorBoundary> <EChart options /> </ErrorBoundary>;
+let make = (~options, ~redraw=?) =>
+  <ErrorBoundary> <EChart options redraw /> </ErrorBoundary>;

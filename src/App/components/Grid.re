@@ -41,12 +41,6 @@ let widget =
     ),
   ]);
 
-/* w: 4,
-   h: 9,
-   x: (i % 3) * 4,
-   y: Math.floor((i / 3) * 3),
-   i: widget.id.toString() */
-
 let createLayouts = x => gridLayout(~lg=x);
 
 let generateLayout = arr =>
@@ -59,7 +53,7 @@ let generateLayout = arr =>
 [@react.component]
 let make = _ => {
   let (widgets, setWidgets) = React.useState(() => [||]);
-  let (resizeWidgetId, setResizeWidgetId) = React.useState(() => "");
+  let (resizeWidgetId, setResizeWidgetId) = React.useState(() => (0, 0));
   let width = Hooks.useWindowSize();
 
   React.useEffect0(() => {
@@ -79,7 +73,8 @@ let make = _ => {
     Some(() => ());
   });
 
-  let handleResize = (_, _, l) => Js.log(l);
+  let handleResize =
+    React.useCallback(l => setResizeWidgetId(_ => (hGet(l), wGet(l))));
 
   <GridLayout.Responsive
     className="layout"
@@ -88,7 +83,7 @@ let make = _ => {
     cols
     rowHeight=80
     width
-    onResize=handleResize>
+    onResize={(_, _, l) => handleResize(l)}>
     {
       React.array(
         Array.map(
@@ -101,7 +96,8 @@ let make = _ => {
                   config =>
                     switch (config) {
                     | None => "error" |> React.string
-                    | Some(options) => <EChart options />
+                    | Some(options) =>
+                      <EChart options redraw=resizeWidgetId />
                     }
                 )
               }
