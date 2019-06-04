@@ -23,6 +23,7 @@
     "chart.js": "^2.8.0",
     "codemirror": "^5.45.0",
     "create-react-class": "^15.6.3",
+    "echarts": "^4.2.1",
     "file-loader": "^3.0.1",
     "micro": "^9.3.4",
     "mongoose": "^5.5.11",

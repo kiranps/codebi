@@ -59,6 +59,7 @@ let generateLayout = arr =>
 [@react.component]
 let make = _ => {
   let (widgets, setWidgets) = React.useState(() => [||]);
+  let (resizeWidgetId, setResizeWidgetId) = React.useState(() => "");
   let width = Hooks.useWindowSize();
 
   React.useEffect0(() => {
@@ -78,13 +79,16 @@ let make = _ => {
     Some(() => ());
   });
 
+  let handleResize = (_, _, l) => Js.log(l);
+
   <GridLayout.Responsive
     className="layout"
     layouts={generateLayout(widgets)}
     breakpoints
     cols
     rowHeight=80
-    width>
+    width
+    onResize=handleResize>
     {
       React.array(
         Array.map(
@@ -97,7 +101,7 @@ let make = _ => {
                   config =>
                     switch (config) {
                     | None => "error" |> React.string
-                    | Some(options) => <Chart options />
+                    | Some(options) => <EChart options />
                     }
                 )
               }

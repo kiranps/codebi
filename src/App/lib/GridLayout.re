@@ -10,6 +10,8 @@ module Types = {
 
   [@bs.deriving abstract]
   type gridLayout = {lg: array(layout)};
+
+  type foo;
 };
 
 open Types;
@@ -38,6 +40,7 @@ module Responsive = {
       ~breakpoints: breakpoints,
       ~cols: breakpoints,
       ~rowHeight: int=?,
+      ~onResize: (array(layout), layout, layout) => unit,
       ~width: int=?
     ) =>
     React.element =
