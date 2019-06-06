@@ -38,12 +38,19 @@ let generateLayout = arr =>
      )
   |> createLayouts;
 
+module GridContainer = {
+  let container = style([backgroundColor(`hex("f5f5f5"))]);
+
+  [@react.component]
+  let make = (~children) => <div className=container> children </div>;
+};
+
 [@react.component]
 let make = _ => {
   let (widgets, setWidgets) = React.useState(() => [||]);
   let (resizeWidgetId, setResizeWidgetId) =
     React.useState(() => Some(("", 0, 0)));
-  let width = Hooks.useWindowSize();
+  let width = Hooks.useWindowSize() - 10; /* change to document.body.scrollWidth */
 
   React.useEffect0(() => {
     Js.Promise.(
@@ -82,35 +89,38 @@ let make = _ => {
       }
     );
 
-  <GridLayout.Responsive
-    className="layout"
-    layouts={generateLayout(widgets)}
-    breakpoints
-    cols
-    rowHeight=80
-    width
-    onResize={(_, _, l) => handleResize(l)}>
-    {
-      React.array(
-        Array.map(
-          w =>
-            <div key={w.id} id={w.id} className=widget>
-              {
-                w.config
-                |> JSONfn.parse
-                |> (
-                  config =>
-                    switch (config) {
-                    | None => <div key={w.id}> {"error" |> React.string} </div>
-                    | Some(options) =>
-                      <EChart options redraw={handleRedraw(w.id)} />
-                    }
-                )
-              }
-            </div>,
-          widgets,
-        ),
-      )
-    }
-  </GridLayout.Responsive>;
+  <GridContainer>
+    <GridLayout.Responsive
+      className="layout"
+      layouts={generateLayout(widgets)}
+      breakpoints
+      cols
+      rowHeight=80
+      width
+      onResize={(_, _, l) => handleResize(l)}>
+      {
+        React.array(
+          Array.map(
+            w =>
+              <div key={w.id} id={w.id} className=widget>
+                {
+                  w.config
+                  |> JSONfn.parse
+                  |> (
+                    config =>
+                      switch (config) {
+                      | None =>
+                        <div key={w.id}> {"error" |> React.string} </div>
+                      | Some(options) =>
+                        <EChart options redraw={handleRedraw(w.id)} />
+                      }
+                  )
+                }
+              </div>,
+            widgets,
+          ),
+        )
+      }
+    </GridLayout.Responsive>
+  </GridContainer>;
 };
