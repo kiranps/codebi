@@ -14,6 +14,10 @@
     {
       "src": "/api/get-widget/",
       "dest": "serverless/getWidget.js"
+    },
+    {
+      "src": "/api/delete-widget/",
+      "dest": "serverless/deleteWidget.js"
     }
   ]
 }

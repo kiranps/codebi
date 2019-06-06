@@ -5,37 +5,15 @@ module Types = {
     config: string,
   };
 
-  type newWidget = {
-    name: string,
-    config: string,
-  };
-
   type widgetResponse =
     | Widget(widgetType)
     | NotFound
-    | Failure;
+    | Failure
+    | Deleted(string);
 
   type widgetsResponse =
     | Widgets(array(widgetType))
     | Failure;
-
-  type widgetResponse0 = {
-    status: string,
-    message: string,
-  };
-
-  type widgetResponse1 = {
-    status: string,
-    widget: widgetType,
-  };
-
-  type widgetResponse2 = {status: string};
-
-  type widgetResponse3 = {
-    status: string,
-    widget: widgetType,
-    message: string,
-  };
 };
 
 module Decode = {
@@ -117,6 +95,21 @@ module Api = {
            (
              switch (Decode.status(json)) {
              | "found" => json |> Decode.widget |> (json => Widget(json))
+             | "not_found" => NotFound
+             | _ => Failure
+             }
+           )
+           |> resolve
+         )
+    );
+
+  let delete = id =>
+    Js.Promise.(
+      Http.get("/api/delete-widget/?id=" ++ id)
+      |> then_(json =>
+           (
+             switch (Decode.status(json)) {
+             | "deleted" => Deleted(id)
              | "not_found" => NotFound
              | _ => Failure
              }

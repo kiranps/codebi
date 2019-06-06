@@ -10,8 +10,6 @@ module Types = {
 
   [@bs.deriving abstract]
   type gridLayout = {lg: array(layout)};
-
-  type foo;
 };
 
 open Types;
@@ -45,4 +43,27 @@ module Responsive = {
     ) =>
     React.element =
     "Responsive";
+};
+
+module Widget = {
+  open Css;
+
+  let widget =
+    style([
+      boxSizing(borderBox),
+      borderRadius(px(4)),
+      backgroundColor(white),
+      padding(px(10)),
+      boxShadow(
+        ~x=px(0),
+        ~y=px(2),
+        ~blur=px(5),
+        ~inset=false,
+        rgba(0, 0, 0, 0.1),
+      ),
+    ]);
+
+  [@react.component]
+  let make = (~children, ~id, ~className=?) =>
+    <div key=id className=widget> children </div>;
 };

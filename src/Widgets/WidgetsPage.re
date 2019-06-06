@@ -1,10 +1,28 @@
 open Widget.Types;
 
+type actions =
+  | Update(array(widgetType))
+  | Delete(string);
+
+type state = {widgets: array(widgetType)};
+
 let openPlayground = id => "#/playground/" ++ id |> ReasonReactRouter.push;
 
 [@react.component]
 let make = _ => {
   let (widgets, setWidgets) = React.useState(() => [||]);
+
+  let (state, dispatch) =
+    React.useReducer(
+      (state, action) =>
+        switch (action) {
+        | Update(value) => {widgets: value}
+        | Delete(id) => {
+            widgets: Belt.Array.keep(state.widgets, x => x.id !== id),
+          }
+        },
+      {widgets: [||]},
+    );
 
   React.useEffect0(() => {
     Js.Promise.(
@@ -12,8 +30,8 @@ let make = _ => {
       |> then_(json =>
            (
              switch (json) {
-             | Widgets(data) => setWidgets(_ => data)
-             | Failure => setWidgets(_ => [||])
+             | Widgets(data) => dispatch(Update(data))
+             | Failure => dispatch(Update([||]))
              }
            )
            |> resolve
@@ -30,18 +48,37 @@ let make = _ => {
     ();
   };
 
+  let handleDelete = id => {
+    Js.Promise.(
+      Widget.Api.delete(id)
+      |> then_(status =>
+           (
+             switch (status) {
+             | Deleted(id) => dispatch(Delete(id))
+             | _ => Js.log("error")
+             }
+           )
+           |> resolve
+         )
+    );
+    ();
+  };
+
   <div>
     {
       React.array(
         Array.map(
           widget =>
-            <div>
-              <span key={widget.id}> {React.string(widget.id)} </span>
+            <div key={widget.id}>
+              <span> {React.string(widget.id)} </span>
               <a href={"#/playground/" ++ widget.id}>
                 {"open" |> React.string}
               </a>
+              <button onClick={_ => handleDelete(widget.id)}>
+                {"delete" |> React.string}
+              </button>
             </div>,
-          widgets,
+          state.widgets,
         ),
       )
     }

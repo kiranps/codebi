@@ -7,6 +7,6 @@ let make = () => {
 
   switch (result) {
   | None => <div> {"error" |> ReasonReact.string} </div>
-  | Some(value) => <EChart options=value />
+  | Some(value) => <EChart options=value redraw=None />
   };
 };

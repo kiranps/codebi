@@ -4,18 +4,6 @@ open GridLayout.Types;
 
 Utils.require("react-grid-layout/css/styles.css");
 
-let layouts = [%raw
-  {|
-    {
-     lg: [
-      {i: 'a', x: 0, y: 0, w: 4, h: 4},
-      {i: 'b', x: 4, y: 0, w: 4, h: 4},
-      {i: 'c', x: 8, y: 0, w: 4, h: 4}
-     ]
-    }
-  |}
-];
-
 let breakpoints = [%raw
   {|
     {lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}
@@ -53,7 +41,8 @@ let generateLayout = arr =>
 [@react.component]
 let make = _ => {
   let (widgets, setWidgets) = React.useState(() => [||]);
-  let (resizeWidgetId, setResizeWidgetId) = React.useState(() => (0, 0));
+  let (resizeWidgetId, setResizeWidgetId) =
+    React.useState(() => Some(("", 0, 0)));
   let width = Hooks.useWindowSize();
 
   React.useEffect0(() => {
@@ -74,7 +63,24 @@ let make = _ => {
   });
 
   let handleResize =
-    React.useCallback(l => setResizeWidgetId(_ => (hGet(l), wGet(l))));
+    React.useCallback(l =>
+      switch (resizeWidgetId) {
+      | Some((_, height, width)) =>
+        if (height !== hGet(l) || width !== wGet(l)) {
+          setResizeWidgetId(_ => Some((iGet(l), hGet(l), wGet(l))));
+        }
+      | None => ()
+      }
+    );
+
+  let handleRedraw =
+    React.useCallback(id =>
+      switch (resizeWidgetId) {
+      | Some((wid, height, width)) =>
+        wid == id ? Some((height, width)) : None
+      | None => None
+      }
+    );
 
   <GridLayout.Responsive
     className="layout"
@@ -88,16 +94,16 @@ let make = _ => {
       React.array(
         Array.map(
           w =>
-            <div key={w.id} className=widget>
+            <div key={w.id} id={w.id} className=widget>
               {
                 w.config
                 |> JSONfn.parse
                 |> (
                   config =>
                     switch (config) {
-                    | None => "error" |> React.string
+                    | None => <div key={w.id}> {"error" |> React.string} </div>
                     | Some(options) =>
-                      <EChart options redraw=resizeWidgetId />
+                      <EChart options redraw={handleRedraw(w.id)} />
                     }
                 )
               }

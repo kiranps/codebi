@@ -46,5 +46,7 @@ module EChart = {
 };
 
 [@react.component]
-let make = (~options, ~redraw=?) =>
-  <ErrorBoundary> <EChart options redraw /> </ErrorBoundary>;
+let make =
+  React.memo((~options, ~redraw: option((int, int))) =>
+    <ErrorBoundary> <EChart options redraw /> </ErrorBoundary>
+  );
