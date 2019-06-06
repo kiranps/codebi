@@ -39,7 +39,7 @@ let generateLayout = arr =>
   |> createLayouts;
 
 module GridContainer = {
-  let container = style([backgroundColor(`hex("f5f5f5"))]);
+  let container = style([backgroundColor(`hex("f0f3f4a8"))]);
 
   [@react.component]
   let make = (~children) => <div className=container> children </div>;
