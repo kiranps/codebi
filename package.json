@@ -27,6 +27,7 @@
     "file-loader": "^3.0.1",
     "micro": "^9.3.4",
     "mongoose": "^5.5.11",
+    "now": "^15.4.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-grid-layout": "^0.16.6",
