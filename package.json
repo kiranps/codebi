@@ -21,7 +21,7 @@
     "bs-fetch": "^0.3.1",
     "bs-platform": "^5.0.4",
     "chart.js": "^2.8.0",
-    "codemirror": "^5.45.0",
+    "codemirror": "^5.58.2",
     "create-react-class": "^15.6.3",
     "echarts": "^4.2.1",
     "file-loader": "^3.0.1",
